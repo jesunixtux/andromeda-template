@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Shell/runtime noise
+*.log
+*.pid
+*.tmp
+*.partial
+
+# Android app artifacts
+*.apk
+*.aab
+*.apks
+*.idsig
+
+# Andromeda local runtime
+runtime/sdk/*
+runtime/avd/*
+runtime/downloads/*
+runtime/logs/*
+runtime/backups/*
+runtime/profiles/*
+runtime/android-user/*
+runtime/tmp/*
+runtime/emulator.pid
+
+# Keep runtime folder structure in Git
+!runtime/sdk/.gitkeep
+!runtime/avd/.gitkeep
+!runtime/downloads/.gitkeep
+!runtime/logs/.gitkeep
+!runtime/backups/.gitkeep
+!runtime/profiles/.gitkeep
+!runtime/android-user/.gitkeep
+!runtime/tmp/.gitkeep
+
+# Local env overrides
+.env
+.env.*
+!.env.example
+runtime/avd/Andromeda_Stable.avd/encryptionkey.img.qcow2
+runtime/avd/Andromeda_Stable.avd/encryptionkey.img.qcow2
+runtime/avd/Andromeda_Stable.avd/encryptionkey.img.qcow2
