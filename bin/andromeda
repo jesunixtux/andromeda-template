@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+
+set -e
+
+ANDROMEDA_BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+ANDROMEDA_ROOT="$(cd "$ANDROMEDA_BIN_DIR/.." && pwd)"
+export ANDROMEDA_ROOT
+
+. "$ANDROMEDA_ROOT/core/env.sh"
+. "$ANDROMEDA_ROOT/core/utils.sh"
+. "$ANDROMEDA_ROOT/core/config.sh"
+. "$ANDROMEDA_ROOT/core/logs.sh"
+. "$ANDROMEDA_ROOT/core/sdk.sh"
+. "$ANDROMEDA_ROOT/core/adb.sh"
+. "$ANDROMEDA_ROOT/core/emulator.sh"
+. "$ANDROMEDA_ROOT/core/avd.sh"
+. "$ANDROMEDA_ROOT/core/apk.sh"
+
+andromeda_ensure_dirs
+andromeda_config_load
+
+andromeda_help() {
+    cat <<EOF
+Andromeda $ANDROMEDA_VERSION
+Android oficial en macOS sin Android Studio.
+
+Uso:
+  ./bin/andromeda <comando> [args]
+
+Comandos:
+  doctor                 Diagnostico completo del entorno.
+  install-sdk            Instala Android SDK Command Line Tools y paquetes minimos.
+  update-sdk             Actualiza paquetes SDK instalados.
+  create                 Crea la instancia AVD oficial configurada.
+  start                  Inicia Android en segundo plano y guarda logs.
+  stop                   Apaga el emulador con adb emu kill.
+  restart                Reinicia la instancia.
+  install-apk <apk>      Instala un APK existente.
+  devices                Lista dispositivos ADB.
+  list-avd               Lista AVDs locales.
+  repair                 Borra la instancia AVD tras confirmacion explicita.
+  clean-cache            Limpia descargas temporales sin tocar userdata.
+  logs [--list|--follow] Muestra logs del emulador.
+  paths                  Muestra rutas usadas por Andromeda.
+  help                   Muestra esta ayuda.
+
+Config:
+  $ANDROMEDA_CONFIG_FILE
+
+Imagen por defecto:
+  $(andromeda_android_image)
+EOF
+}
+
+andromeda_main() {
+    _andromeda_command="${1:-help}"
+    if [ "$#" -gt 0 ]; then
+        shift
+    fi
+
+    case "$_andromeda_command" in
+        doctor)
+            andromeda_doctor "$@"
+            ;;
+        install-sdk)
+            andromeda_install_sdk "$@"
+            ;;
+        update|update-sdk)
+            andromeda_update_sdk "$@"
+            ;;
+        create)
+            andromeda_create_avd "$@"
+            ;;
+        start)
+            andromeda_start_emulator "$@"
+            ;;
+        stop)
+            andromeda_stop_emulator "$@"
+            ;;
+        restart)
+            andromeda_restart_emulator "$@"
+            ;;
+        install-apk)
+            andromeda_install_apk "$@"
+            ;;
+        devices)
+            andromeda_devices "$@"
+            ;;
+        list-avd|list-avds)
+            andromeda_list_avd "$@"
+            ;;
+        repair)
+            andromeda_repair_avd "$@"
+            ;;
+        clean-cache)
+            andromeda_clean_cache "$@"
+            ;;
+        logs)
+            andromeda_logs "$@"
+            ;;
+        paths)
+            andromeda_paths "$@"
+            ;;
+        help|-h|--help)
+            andromeda_help
+            ;;
+        *)
+            andromeda_error "Comando desconocido: $_andromeda_command"
+            printf '\n'
+            andromeda_help
+            exit 1
+            ;;
+    esac
+}
+
+andromeda_main "$@"
